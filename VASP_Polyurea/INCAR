@@ -1,0 +1,21 @@
+polyurethane
+  System = polyurea     
+
+PREC  = Normal    
+ENCUT = 1500      
+ISMEAR = 0        
+IBRION = 0        
+MDALGO = 2        
+ISIF = 2          
+SMASS = 1.0       
+SIGMA = 0.1       
+LREAL = Auto      
+ISYM = 0          
+TEBEG = 300       
+TEEND = 2800      
+NSW = 4000        
+POTIM = 0.5       
+ALGO=Fast       
+NPAR = 25         
+LWAVE = .FALSE.
+LCHARG = .FALSE. 
