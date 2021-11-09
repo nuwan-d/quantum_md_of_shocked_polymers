@@ -1,0 +1,57 @@
+
+# ----------------- LAMMPS atomistic input script-----------------
+
+units              real
+atom_style         full
+boundary           p p p
+
+
+# ----------------- Interaction potential definition-----------------
+
+pair_style          lj/class2/coul/long 10 10
+bond_style	        class2
+angle_style	        class2
+dihedral_style	    class2
+improper_style	    class2
+pair_modify	        mix sixthpower tail yes
+special_bonds	    lj/coul 0 0 1
+
+read_data          "data_after_eq"
+include            "polyurea_cube.params"
+
+change_box all z scale 0.5 remap
+
+
+# -----------------Integration conditions (check)-----------------
+
+variable tstp equal 0.1
+timestep ${tstp}
+variable tdamp equal "v_tstp * 100"
+variable pdamp equal "v_tstp * 1000"
+
+kspace_style	pppm 1.0e-6
+
+
+# -----------------To get rid of out-of-range-atoms error-----------------
+
+neighbor        4.0 bin
+neigh_modify    delay 0 every 1 check yes
+comm_modify 	mode multi cutoff/multi * 25.0
+
+
+# ----------------- Minimize -----------------
+
+min_style          cg
+min_modify         dmax 0.4
+minimize           1e-8 1e-10 20000 50000
+reset_timestep     0
+
+#-------------------Realx---------------------------------------
+
+fix  	    1 all nve
+fix  	    2 all langevin 300 300 ${tdamp} 90429997
+
+thermo 		  1000
+run           100000
+
+
